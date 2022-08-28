@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { OpenIdConfiguration } from './../config/openid-configuration';
+import { OpenIdConfiguration } from '../config/openid-configuration';
 import { BrowserStorageService } from './browser-storage.service';
 
 export type StorageKeys =
