@@ -12,6 +12,7 @@ import { TokenHelperService } from '../utils/tokenHelper/token-helper.service';
 import { StateValidationService } from './state-validation.service';
 import { TokenValidationService } from './token-validation.service';
 import { ValidationResult } from './validation-result';
+import { testAccessToken, testIdToken, testIdTokenPayloadData } from '../../test/token-data.mock';
 
 describe('State Validation Service', () => {
   let stateValidationService: StateValidationService;
@@ -731,7 +732,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -783,7 +784,7 @@ describe('State Validation Service', () => {
     }));
 
     it('access_token should equal result.access_token and is valid if response_type is "id_token token"', waitForAsync(() => {
-      spyOn(tokenHelperService, 'getPayloadFromToken').and.returnValue('decoded_id_token');
+      spyOn(tokenHelperService, 'getPayloadFromToken').and.returnValue(testIdTokenPayloadData);
       spyOn(tokenValidationService, 'validateStateFromHashCallback').and.returnValue(true);
       spyOn(tokenValidationService, 'validateSignatureIdToken').and.returnValue(of(true));
       spyOn(tokenValidationService, 'hasIdTokenExpired').and.returnValue(false);
@@ -815,21 +816,21 @@ describe('State Validation Service', () => {
         state: 'fdffsdfhhhhsdf',
         sessionState: 'fdffsggggggdfsdf',
         authResult: {
-          access_token: 'access_tokenTEST',
-          id_token: 'id_tokenTEST',
+          access_token: testAccessToken,
+          id_token: testIdToken,
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
       const stateObs$ = stateValidationService.getValidatedStateResult(callbackContext, config);
 
       stateObs$.subscribe((state) => {
-        expect(state.accessToken).toBe('access_tokenTEST');
-        expect(state.idToken).toBe('id_tokenTEST');
-        expect(state.decodedIdToken).toBe('decoded_id_token');
-        expect(state.authResponseIsValid).toBe(true);
+        expect(state.accessToken).toEqual(testAccessToken);
+        expect(state.idToken).toEqual(testIdToken);
+        expect(state.decodedIdToken).toEqual(testIdTokenPayloadData);
+        expect(state.authResponseIsValid).toBeTrue();
       });
     }));
 
@@ -855,7 +856,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -899,7 +900,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -946,7 +947,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -991,7 +992,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1043,7 +1044,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1084,7 +1085,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1131,7 +1132,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1177,7 +1178,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1225,7 +1226,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1274,7 +1275,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1327,7 +1328,7 @@ describe('State Validation Service', () => {
           id_token: 'id_tokenTEST',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1346,7 +1347,7 @@ describe('State Validation Service', () => {
 
     it('Response is invalid if validateIdTokenAtHash is false', waitForAsync(() => {
       spyOn(tokenValidationService, 'validateStateFromHashCallback').and.returnValue(true);
-      spyOn(tokenHelperService, 'getPayloadFromToken').and.returnValue('decoded_id_token');
+      spyOn(tokenHelperService, 'getPayloadFromToken').and.returnValue(testIdTokenPayloadData);
       spyOn(tokenValidationService, 'validateSignatureIdToken').and.returnValue(of(true));
       spyOn(tokenValidationService, 'validateIdTokenNonce').and.returnValue(true);
       spyOn(tokenValidationService, 'validateRequiredIdToken').and.returnValue(true);
@@ -1379,11 +1380,11 @@ describe('State Validation Service', () => {
         state: 'fdffsdfhhhhsdf',
         sessionState: 'fdffsggggggdfsdf',
         authResult: {
-          access_token: 'access_tokenTEST',
-          id_token: 'id_tokenTEST',
+          access_token: testAccessToken,
+          id_token: testIdToken,
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1391,10 +1392,10 @@ describe('State Validation Service', () => {
 
       stateObs$.subscribe((state) => {
         expect(logWarningSpy).toHaveBeenCalledOnceWith(config, 'authCallback incorrect at_hash');
-        expect(state.accessToken).toBe('access_tokenTEST');
-        expect(state.idToken).toBe('id_tokenTEST');
-        expect(state.decodedIdToken).toBe('decoded_id_token');
-        expect(state.authResponseIsValid).toBe(false);
+        expect(state.accessToken).toEqual(testAccessToken);
+        expect(state.idToken).toEqual(testIdToken);
+        expect(state.decodedIdToken).toEqual(testIdTokenPayloadData);
+        expect(state.authResponseIsValid).toBeFalse();
       });
     }));
 
@@ -1431,11 +1432,11 @@ describe('State Validation Service', () => {
         state: 'fdffsdfhhhhsdf',
         sessionState: 'fdffsggggggdfsdf',
         authResult: {
-          access_token: 'access_tokenTEST',
-          id_token: 'id_tokenTEST',
+          access_token: testAccessToken,
+          id_token: testIdToken,
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
@@ -1446,11 +1447,11 @@ describe('State Validation Service', () => {
           [config, 'iss validation is turned off, this is not recommended!'],
           [config, 'authCallback token(s) validated, continue'],
         ]);
-        expect(state.state).toBe(ValidationResult.Ok);
-        expect(state.accessToken).toBe('access_tokenTEST');
-        expect(state.authResponseIsValid).toBe(true);
+        expect(state.state).toEqual(ValidationResult.Ok);
+        expect(state.accessToken).toEqual(testAccessToken);
+        expect(state.authResponseIsValid).toBeTrue();
         expect(state.decodedIdToken).toBeDefined();
-        expect(state.idToken).toBe('id_tokenTEST');
+        expect(state.idToken).toEqual(testIdToken);
       });
     }));
 
@@ -1488,7 +1489,7 @@ describe('State Validation Service', () => {
           id_token: '',
         },
         isRenewProcess: false,
-        jwtKeys: null,
+        jwtKeys: {keys: []},
         validationResult: null,
         existingIdToken: null,
       };
