@@ -94,7 +94,14 @@ export class TokenValidationService {
       return true;
     }
 
-    const tokenExpirationDate = this.tokenHelperService.getTokenExpirationDate(decodedIdToken);
+    let tokenExpirationDate: Date;
+
+    try {
+      tokenExpirationDate = this.tokenHelperService.getTokenExpirationDate(decodedIdToken);
+    } catch (e: any) {
+      this.loggerService.logError(configuration, e)
+      return false;
+    }
 
     offsetSeconds = offsetSeconds || 0;
 

@@ -2,16 +2,20 @@ import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { OpenIdConfiguration } from '../../config/openid-configuration';
 import { LoggerService } from '../../logging/logger.service';
+import { ErrorBuilder } from '../error.builder';
 
 const PARTS_OF_TOKEN = 3;
 
 @Injectable()
 export class TokenHelperService {
+  static TokenMissingExpError = ErrorBuilder.buildError('TokenMissingExpError', 'Token is missing the exp claim', TokenHelperService.name);
+  static InvalidTokenError = ErrorBuilder.buildError('InvalidTokenError', 'Token is invalid', TokenHelperService.name);
+
   constructor(private readonly loggerService: LoggerService, @Inject(DOCUMENT) private readonly document: Document) {}
 
   getTokenExpirationDate(dataIdToken: any): Date {
     if (!Object.prototype.hasOwnProperty.call(dataIdToken, 'exp')) {
-      return new Date(new Date().toUTCString());
+      throw TokenHelperService.TokenMissingExpError;
     }
 
     const date = new Date(0); // The 0 here is the key, which sets the date to the epoch

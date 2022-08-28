@@ -21,16 +21,8 @@ describe('Token Helper Service', () => {
   });
 
   describe('getTokenExpirationDate', () => {
-    it('returns not null if param has no property exp', () => {
-      const result = tokenHelperService.getTokenExpirationDate({});
-
-      expect(result).toBeDefined();
-    });
-
-    it('returns date if param has no property exp', () => {
-      const result = tokenHelperService.getTokenExpirationDate({});
-
-      expect(result instanceof Date).toBe(true);
+    it('throws error if param has no property exp', () => {
+      expect(() => tokenHelperService.getTokenExpirationDate({})).toThrow(TokenHelperService.TokenMissingExpError);
     });
 
     it('returns correct date if param has property exp', () => {
