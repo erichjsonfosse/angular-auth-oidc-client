@@ -21,7 +21,8 @@ export class StateValidationService {
     private readonly loggerService: LoggerService,
     private readonly equalityService: EqualityService,
     private readonly flowHelper: FlowHelper
-  ) {}
+  ) {
+  }
 
   getValidatedStateResult(callbackContext: CallbackContext, configuration: OpenIdConfiguration): Observable<StateValidationResult> {
     if (!callbackContext || callbackContext.authResult.error) {
@@ -64,7 +65,7 @@ export class StateValidationService {
 
       toReturn.decodedIdToken = this.tokenHelperService.getPayloadFromToken(toReturn.idToken, false, configuration);
 
-      return this.tokenValidationService.validateSignatureIdToken(toReturn.idToken, callbackContext.jwtKeys, configuration).pipe(
+      return this.tokenValidationService.validateSignatureIdToken(toReturn.idToken, callbackContext.jwtKeys.keys, configuration).pipe(
         mergeMap((isSignatureIdTokenValid: boolean) => {
           if (!isSignatureIdTokenValid) {
             this.loggerService.logDebug(configuration, 'authCallback Signature validation failed id_token');
@@ -264,7 +265,7 @@ export class StateValidationService {
     newIdToken: any,
     configuration: OpenIdConfiguration
   ): boolean {
-    const { useRefreshToken, disableRefreshIdTokenAuthTimeValidation } = configuration;
+    const {useRefreshToken, disableRefreshIdTokenAuthTimeValidation} = configuration;
 
     if (!useRefreshToken) {
       return true;
@@ -326,7 +327,7 @@ export class StateValidationService {
   }
 
   private handleSuccessfulValidation(configuration: OpenIdConfiguration): void {
-    const { autoCleanStateAfterAuthentication } = configuration;
+    const {autoCleanStateAfterAuthentication} = configuration;
 
     this.storagePersistenceService.write('authNonce', null, configuration);
 
@@ -337,7 +338,7 @@ export class StateValidationService {
   }
 
   private handleUnsuccessfulValidation(configuration: OpenIdConfiguration): void {
-    const { autoCleanStateAfterAuthentication } = configuration;
+    const {autoCleanStateAfterAuthentication} = configuration;
 
     this.storagePersistenceService.write('authNonce', null, configuration);
 

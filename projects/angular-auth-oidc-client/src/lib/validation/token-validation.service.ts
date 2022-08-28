@@ -9,6 +9,7 @@ import { TokenHelperService } from '../utils/tokenHelper/token-helper.service';
 import { JwtWindowCryptoService } from './jwt-window-crypto.service';
 import { JwkExtractor } from '../extractors/jwk.extractor';
 import { JwkWindowCryptoService } from './jwk-window-crypto.service';
+import { isNil } from '../utils/is-nil';
 
 // http://openid.net/specs/openid-connect-implicit-1_0.html
 
@@ -67,7 +68,8 @@ export class TokenValidationService {
     private readonly jwkWindowCryptoService: JwkWindowCryptoService,
     private readonly jwtWindowCryptoService: JwtWindowCryptoService,
     @Inject(DOCUMENT) private readonly document: any
-  ) {}
+  ) {
+  }
 
   // id_token C7: The current time MUST be before the time represented by the exp Claim
   // (possibly allowing for some small leeway to account for clock skew).
@@ -267,9 +269,9 @@ export class TokenValidationService {
       this.loggerService.logDebug(
         configuration,
         'Validate_id_token_iss failed, dataIdToken.iss: ' +
-          dataIdToken.iss +
-          ' authWellKnownEndpoints issuer:' +
-          authWellKnownEndpointsIssuer
+        dataIdToken.iss +
+        ' authWellKnownEndpoints issuer:' +
+        authWellKnownEndpointsIssuer
       );
 
       return false;
@@ -336,12 +338,17 @@ export class TokenValidationService {
   // Header Parameter of the JOSE Header.The Client MUST use the keys provided by the Issuer.
   // id_token C6: The alg value SHOULD be RS256. Validation of tokens using other signing algorithms is described in the
   // OpenID Connect Core 1.0 [OpenID.Core] specification.
-  validateSignatureIdToken(idToken: string, jwtkeys: any, configuration: OpenIdConfiguration): Observable<boolean> {
-    if (!jwtkeys || !jwtkeys.keys) {
+  validateSignatureIdToken(idToken: string, jwtKeys: JsonWebKey[], configuration: OpenIdConfiguration): Observable<boolean> {
+    if (isNil(idToken) || isNil(jwtKeys)) {
       return of(false);
     }
 
-    const headerData = this.tokenHelperService.getHeaderFromToken(idToken, false, configuration);
+    let headerData;
+    try {
+      headerData = this.tokenHelperService.getHeaderFromToken(idToken, false, configuration);
+    } catch (e: any) {
+      return of(false);
+    }
 
     if (Object.keys(headerData).length === 0 && headerData.constructor === Object) {
       this.loggerService.logWarning(configuration, 'id token has no header data');
@@ -352,7 +359,6 @@ export class TokenValidationService {
     const kid: string = headerData.kid;
     let alg: string = headerData.alg;
 
-    let keys: JsonWebKey[] = jwtkeys.keys;
     let foundKeys: JsonWebKey[];
     let key: JsonWebKey;
 
@@ -367,13 +373,13 @@ export class TokenValidationService {
 
     try {
       foundKeys = kid ?
-        this.jwkExtractor.extractJwk(keys, {kid, kty, use}, false) :
-        this.jwkExtractor.extractJwk(keys, {kty, use}, false);
+        this.jwkExtractor.extractJwk(jwtKeys, {kid, kty, use}, false) :
+        this.jwkExtractor.extractJwk(jwtKeys, {kty, use}, false);
 
       if (foundKeys.length === 0) {
         foundKeys = kid ?
-          this.jwkExtractor.extractJwk(keys, {kid, kty}) :
-          this.jwkExtractor.extractJwk(keys, {kty});
+          this.jwkExtractor.extractJwk(jwtKeys, {kid, kty}) :
+          this.jwkExtractor.extractJwk(jwtKeys, {kty});
       }
 
       key = foundKeys[0];
@@ -396,7 +402,7 @@ export class TokenValidationService {
 
     return from(this.jwkWindowCryptoService.importVerificationKey(key, algorithm)).pipe(
       mergeMap((cryptoKey: CryptoKey) => {
-        const signature: Uint8Array = base64url.parse(rawSignature, { loose: true });
+        const signature: Uint8Array = base64url.parse(rawSignature, {loose: true});
 
         const verifyAlgorithm: RsaHashedImportParams | EcdsaParams = this.getVerifyAlg(alg);
 
