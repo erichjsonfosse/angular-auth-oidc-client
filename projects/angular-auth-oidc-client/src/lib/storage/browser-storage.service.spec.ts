@@ -142,7 +142,6 @@ describe('Browser Service', () => {
     it('returns false if there is no storage', () => {
       Storage = undefined;
       expect((service as any).hasStorage()).toBeFalse();
-      Storage = Storage;
     });
   });
 });
