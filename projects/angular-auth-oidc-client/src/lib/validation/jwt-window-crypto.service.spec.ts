@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CryptoService } from '../utils/crypto/crypto-service';
 import { JwtWindowCryptoService } from './jwt-window-crypto.service';
 
@@ -23,14 +23,17 @@ describe('JwtWindowCryptoService', () => {
   describe('generateCodeChallenge', () => {
     it(
       'returns good result with correct codeVerifier',
-      waitForAsync(() => {
-        const outcome = 'R2TWD45Vtcf_kfAqjuE3LMSRF3JDE5fsFndnn6-a0nQ';
-        const observable = service.generateCodeChallenge('44445543344242132145455aaabbdc3b4');
+      () => {
+        return new Promise<void>((resolve) => {
+          const outcome = 'R2TWD45Vtcf_kfAqjuE3LMSRF3JDE5fsFndnn6-a0nQ';
+          const observable = service.generateCodeChallenge('44445543344242132145455aaabbdc3b4');
 
-        observable.subscribe((value) => {
-          expect(value).toBe(outcome);
+          observable.subscribe((value) => {
+            expect(value).toBe(outcome);
+            resolve();
+          });
         });
-      })
+      }
     );
   });
 });
