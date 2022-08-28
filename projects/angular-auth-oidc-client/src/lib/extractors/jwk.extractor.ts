@@ -1,25 +1,13 @@
 import { Injectable } from '@angular/core';
+import { ErrorBuilder } from '../utils/error.builder';
 
 @Injectable()
 export class JwkExtractor {
-  static InvalidArgumentError = {
-    name: JwkExtractor.buildErrorName('InvalidArgumentError'),
-    message: 'Array of keys was empty. Unable to extract'
-  };
+  static InvalidArgumentError = ErrorBuilder.buildError('InvalidArgumentError', 'Array of keys was empty. Unable to extract', JwkExtractor.name);
 
-  static NoMatchingKeysError = {
-    name: JwkExtractor.buildErrorName('NoMatchingKeysError'),
-    message: 'No key found matching the spec'
-  };
+  static NoMatchingKeysError = ErrorBuilder.buildError('NoMatchingKeysError', 'No key found matching the spec', JwkExtractor.name);
 
-  static SeveralMatchingKeysError = {
-    name: JwkExtractor.buildErrorName('SeveralMatchingKeysError'),
-    message: 'More than one key found. Please use spec to filter'
-  };
-
-  private static buildErrorName(name: string): string {
-    return JwkExtractor.name + ': ' + name;
-  }
+  static SeveralMatchingKeysError = ErrorBuilder.buildError('SeveralMatchingKeysError', 'More than one key found. Please use spec to filter', JwkExtractor.name);
 
   extractJwk(keys: JsonWebKey[], spec?: {kid?: string, use?: string, kty?: string}, throwOnEmpty = true): JsonWebKey[] {
     if (0 === keys.length) {
