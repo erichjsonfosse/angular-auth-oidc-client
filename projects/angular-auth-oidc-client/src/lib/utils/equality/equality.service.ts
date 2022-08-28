@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
+import { isNil } from '../is-nil';
 
 @Injectable()
 export class EqualityService {
   isStringEqualOrNonOrderedArrayEqual(value1: string | any[], value2: string | any[]): boolean {
-    if (this.isNullOrUndefined(value1)) {
+    if (isNil(value1)) {
       return false;
     }
 
-    if (this.isNullOrUndefined(value2)) {
+    if (isNil(value2)) {
       return false;
     }
 
@@ -95,9 +96,5 @@ export class EqualityService {
     }
 
     return arr1.some((v) => arr2.includes(v));
-  }
-
-  private isNullOrUndefined(val: any): boolean {
-    return val === null || val === undefined;
   }
 }
