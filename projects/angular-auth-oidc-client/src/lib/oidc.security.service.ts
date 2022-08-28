@@ -146,7 +146,6 @@ export class OidcSecurityService {
    * an error message in case an error happened in an array for each config which was provided
    *
    * @param url The URL to perform the authorization on the behalf of.
-   * @param configId The configId to perform the authorization on the behalf of. If not passed, all of the current
    * configured ones will be used to check.
    *
    * @returns An array of `LoginResponse` objects containing all information about the logins

@@ -21,6 +21,7 @@ export class AutoLoginService {
   /**
    * Saves the redirect URL to storage.
    *
+   * @param config
    * @param url The redirect URL to save.
    */
   saveRedirectRoute(config: OpenIdConfiguration, url: string): void {
