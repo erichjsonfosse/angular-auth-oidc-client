@@ -48,13 +48,6 @@ export class BrowserStorageService {
       return false;
     }
 
-    // const storage = this.getStorage(configuration);
-    // if (!storage) {
-    //   this.loggerService.logDebug(configuration, `Wanted to write '${key}' but Storage was falsy`);
-
-    //   return false;
-    // }
-
     this.abstractSecurityStorage.remove(key);
 
     return true;
@@ -67,13 +60,6 @@ export class BrowserStorageService {
 
       return false;
     }
-
-    // const storage = this.getStorage(configuration);
-    // if (!storage) {
-    //   this.loggerService.logDebug(configuration, `Wanted to clear storage but Storage was falsy`);
-
-    //   return false;
-    // }
 
     this.abstractSecurityStorage.clear();
 
