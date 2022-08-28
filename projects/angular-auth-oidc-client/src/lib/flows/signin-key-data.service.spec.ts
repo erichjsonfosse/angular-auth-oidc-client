@@ -81,7 +81,7 @@ describe('Signin Key Data Service', () => {
       spyOn(storagePersistenceService, 'read')
         .withArgs('authWellKnownEndPoints', { configId: 'configId1' })
         .and.returnValue({ jwksUri: 'someUrl' });
-      const spy = spyOn(dataService, 'get').and.callFake(() => of());
+      const spy = spyOn(dataService, 'get').and.callFake(() => of(undefined));
 
       const result = service.getSigningKeys({ configId: 'configId1' });
 
