@@ -9,7 +9,8 @@ const PARTS_OF_TOKEN = 3;
 @Injectable()
 export class TokenHelperService {
   static TokenMissingExpError = ErrorBuilder.buildError('TokenMissingExpError', 'Token is missing the exp claim', TokenHelperService.name);
-  static InvalidTokenError = ErrorBuilder.buildError('InvalidTokenError', 'Token is invalid', TokenHelperService.name);
+  static InvalidTokenError = ErrorBuilder.buildError('InvalidTokenError', 'Token is invalid. Try validating it at jwt.io', TokenHelperService.name);
+  static MissingTokenError = ErrorBuilder.buildError('MissingTokenError', 'Token is missing', TokenHelperService.name);
 
   constructor(private readonly loggerService: LoggerService, @Inject(DOCUMENT) private readonly document: Document) {}
 
@@ -26,9 +27,7 @@ export class TokenHelperService {
   }
 
   getSigningInputFromToken(token: any, encoded: boolean, configuration: OpenIdConfiguration): string {
-    if (!this.tokenIsValid(token, configuration)) {
-      return '';
-    }
+    this.throwIfInvalidToken(token, configuration);
 
     const header: string = this.getHeaderFromToken(token, encoded, configuration);
     const payload: string = this.getPayloadFromToken(token, encoded, configuration);
@@ -37,39 +36,33 @@ export class TokenHelperService {
   }
 
   getHeaderFromToken(token: any, encoded: boolean, configuration: OpenIdConfiguration): any {
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+    this.throwIfInvalidToken(token, configuration);
 
-    return this.getPartOfToken(token, 0, encoded);
+    return encoded ? this.getPartOfToken(token, 0) : this.getDecodedPartOfToken(token, 0);
   }
 
   getPayloadFromToken(token: any, encoded: boolean, configuration: OpenIdConfiguration): any {
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+    this.throwIfInvalidToken(token, configuration);
 
-    return this.getPartOfToken(token, 1, encoded);
+    return encoded ? this.getPartOfToken(token, 1) : this.getDecodedPartOfToken(token, 1);
   }
 
   getSignatureFromToken(token: any, encoded: boolean, configuration: OpenIdConfiguration): any {
-    if (!this.tokenIsValid(token, configuration)) {
-      return {};
-    }
+    this.throwIfInvalidToken(token, configuration);
 
-    return this.getPartOfToken(token, 2, encoded);
+    return encoded ? this.getPartOfToken(token, 2) : this.getDecodedPartOfToken(token, 2);
   }
 
-  private getPartOfToken(token: string, index: number, encoded: boolean): any {
+  private getDecodedPartOfToken(token: string, index: number): object {
     const partOfToken = this.extractPartOfToken(token, index);
-
-    if (encoded) {
-      return partOfToken;
-    }
 
     const result = this.urlBase64Decode(partOfToken);
 
     return JSON.parse(result);
+  }
+
+  private getPartOfToken(token: string, index: number): string {
+    return this.extractPartOfToken(token, index);
   }
 
   private urlBase64Decode(str: string): string {
@@ -106,28 +99,26 @@ export class TokenHelperService {
     }
   }
 
-  private tokenIsValid(token: string, configuration: OpenIdConfiguration): boolean {
+  private throwIfInvalidToken(token: string, configuration: OpenIdConfiguration): void {
     if (!token) {
-      this.loggerService.logError(configuration, `token '${token}' is not valid --> token falsy`);
+      this.loggerService.logError(configuration, TokenHelperService.MissingTokenError);
 
-      return false;
+      throw TokenHelperService.MissingTokenError;
     }
 
-    if (!(token as string).includes('.')) {
-      this.loggerService.logError(configuration, `token '${token}' is not valid --> no dots included`);
+    if (!token.includes('.')) {
+      this.loggerService.logError(configuration, TokenHelperService.InvalidTokenError);
 
-      return false;
+      throw TokenHelperService.InvalidTokenError;
     }
 
     const parts = token.split('.');
 
     if (parts.length !== PARTS_OF_TOKEN) {
-      this.loggerService.logError(configuration, `token '${token}' is not valid --> token has to have exactly ${PARTS_OF_TOKEN - 1} dots`);
+      this.loggerService.logError(configuration, TokenHelperService.InvalidTokenError);
 
-      return false;
+      throw TokenHelperService.InvalidTokenError;
     }
-
-    return true;
   }
 
   private extractPartOfToken(token: string, index: number): string {
