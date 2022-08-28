@@ -12,7 +12,7 @@ describe('CurrentUrlService', () => {
         {
           provide: DOCUMENT,
           useValue: {
-            defaultView: { location: 'http://my-url.com?state=my-state' },
+            defaultView: { location: 'https://my-url.com?state=my-state' },
           },
         },
       ],
@@ -31,7 +31,7 @@ describe('CurrentUrlService', () => {
     it('returns the current URL', () => {
       const currentUrl = service.getCurrentUrl();
 
-      expect(currentUrl).toBe('http://my-url.com?state=my-state');
+      expect(currentUrl).toBe('https://my-url.com?state=my-state');
     });
   });
 
