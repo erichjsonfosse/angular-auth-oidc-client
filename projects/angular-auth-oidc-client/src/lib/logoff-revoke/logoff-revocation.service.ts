@@ -59,7 +59,7 @@ export class LogoffRevocationService {
     allConfigs.forEach((configuration) => this.logoffLocal(configuration, allConfigs));
   }
 
-  // The refresh token and and the access token are revoked on the server. If the refresh token does not exist
+  // The refresh token and the access token are revoked on the server. If the refresh token does not exist
   // only the access token is revoked. Then the logout run.
   logoffAndRevokeTokens(config: OpenIdConfiguration, allConfigs: OpenIdConfiguration[], authOptions?: AuthOptions): Observable<any> {
     const { revocationEndpoint } = this.storagePersistenceService.read('authWellKnownEndPoints', config) || {};
@@ -100,7 +100,7 @@ export class LogoffRevocationService {
   // https://tools.ietf.org/html/rfc7009
   // revokes an access token on the STS. If no token is provided, then the token from
   // the storage is revoked. You can pass any token to revoke. This makes it possible to
-  // manage your own tokens. The is a public API.
+  // manage your own tokens. This is a public API.
   revokeAccessToken(configuration: OpenIdConfiguration, accessToken?: any): Observable<any> {
     const accessTok = accessToken || this.storagePersistenceService.getAccessToken(configuration);
     const body = this.urlService.createRevocationEndpointBodyAccessToken(accessTok, configuration);
@@ -109,7 +109,7 @@ export class LogoffRevocationService {
   }
 
   // https://tools.ietf.org/html/rfc7009
-  // revokes an refresh token on the STS. This is only required in the code flow with refresh tokens.
+  // revokes a refresh token on the STS. This is only required in the code flow with refresh tokens.
   // If no token is provided, then the token from the storage is revoked. You can pass any token to revoke.
   // This makes it possible to manage your own tokens.
   revokeRefreshToken(configuration: OpenIdConfiguration, refreshToken?: any): Observable<any> {

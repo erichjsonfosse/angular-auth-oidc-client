@@ -273,7 +273,7 @@ export class OidcSecurityService {
    * Redirects the user to the Security Token Service to begin the authentication process.
    *
    * @param configId The configId to perform the action in behalf of. If not passed, the first configs will be taken
-   * @param authOptions The custom options for the the authentication request.
+   * @param authOptions The custom options for the authentication request.
    */
   authorize(configId?: string, authOptions?: AuthOptions): void {
     this.configurationService.getOpenIDConfiguration(configId).subscribe((config) => this.loginService.login(config, authOptions));
@@ -316,7 +316,7 @@ export class OidcSecurityService {
 
   /**
    * Revokes the refresh token (if present) and the access token on the server and then performs the logoff operation.
-   * The refresh token and and the access token are revoked on the server. If the refresh token does not exist
+   * The refresh token and the access token are revoked on the server. If the refresh token does not exist
    * only the access token is revoked. Then the logout run.
    *
    * @param configId The configId to perform the action in behalf of. If not passed, the first configs will be taken
@@ -339,7 +339,7 @@ export class OidcSecurityService {
    * then only a local logout is performed.
    *
    * @param configId The configId to perform the action in behalf of. If not passed, the first configs will be taken
-   * @param authOptions with custom parameters and/or an custom url handler
+   * @param authOptions with custom parameters and/or a custom url handler
    */
   logoff(configId?: string, authOptions?: AuthOptions): void {
     this.configurationService
@@ -416,7 +416,7 @@ export class OidcSecurityService {
   }
 
   /**
-   * Creates the authorize URL based on your flow
+   * Creates the authorize-URL based on your flow
    *
    * @param customParams
    * @param configId The configId to perform the action in behalf of. If not passed, the first configs will be taken

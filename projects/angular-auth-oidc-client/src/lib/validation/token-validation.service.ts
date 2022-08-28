@@ -44,13 +44,13 @@ import { JwkWindowCryptoService } from './jwk-window-crypto.service';
 // id_token C10: If the acr Claim was requested, the Client SHOULD check that the asserted Claim Value is appropriate.
 // The meaning and processing of acr Claim Values is out of scope for this document.
 //
-// id_token C11: When a max_age request is made, the Client SHOULD check the auth_time Claim value and request re- authentication
-// if it determines too much time has elapsed since the last End- User authentication.
+// id_token C11: When a max_age request is made, the Client SHOULD check the auth_time Claim value and request re-authentication
+// if it determines too much time has elapsed since the last End-User authentication.
 
 // Access Token Validation
 // access_token C1: Hash the octets of the ASCII representation of the access_token with the hash algorithm specified in JWA[JWA]
 // for the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is RS256, the hash algorithm used is SHA-256.
-// access_token C2: Take the left- most half of the hash and base64url- encode it.
+// access_token C2: Take the left-most half of the hash and base64url- encode it.
 // access_token C3: The value of at_hash in the ID Token MUST match the value produced in the previous step if at_hash is present
 // in the ID Token.
 
@@ -150,7 +150,7 @@ export class TokenValidationService {
   // and optionally, port number and path components and no query or fragment components.
   //
   // sub
-  // REQUIRED. Subject Identifier.Locally unique and never reassigned identifier within the Issuer for the End- User,
+  // REQUIRED. Subject Identifier.Locally unique and never reassigned identifier within the Issuer for the End-User,
   // which is intended to be consumed by the Client, e.g., 24400320 or AItOawmwtWwcT0k51BayewNvutrJUqsvl6qs7A4.
   // It MUST NOT exceed 255 ASCII characters in length.The sub value is a case-sensitive string.
   //
@@ -164,13 +164,13 @@ export class TokenValidationService {
   // REQUIRED. Expiration time on or after which the ID Token MUST NOT be accepted for processing.
   // The processing of this parameter requires that the current date/ time MUST be before the expiration date/ time listed in the value.
   // Implementers MAY provide for some small leeway, usually no more than a few minutes, to account for clock skew.
-  // Its value is a JSON [RFC7159] number representing the number of seconds from 1970- 01 - 01T00: 00:00Z as measured in UTC until
+  // Its value is a JSON [RFC7159] number representing the number of seconds from 1970-01-01T00:00:00Z as measured in UTC until
   // the date/ time.
   // See RFC 3339 [RFC3339] for details regarding date/ times in general and UTC in particular.
   //
   // iat
   // REQUIRED. Time at which the JWT was issued. Its value is a JSON number representing the number of seconds from
-  // 1970- 01 - 01T00: 00: 00Z as measured
+  // 1970-01-01T00:00:00Z as measured
   // in UTC until the date/ time.
   validateRequiredIdToken(dataIdToken: any, configuration: OpenIdConfiguration): boolean {
     let validated = true;
@@ -506,7 +506,7 @@ export class TokenValidationService {
   // Access Token Validation
   // access_token C1: Hash the octets of the ASCII representation of the access_token with the hash algorithm specified in JWA[JWA]
   // for the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is RS256, the hash algorithm used is SHA-256.
-  // access_token C2: Take the left- most half of the hash and base64url- encode it.
+  // access_token C2: Take the left-most half of the hash and base64url- encode it.
   // access_token C3: The value of at_hash in the ID Token MUST match the value produced in the previous step if at_hash
   // is present in the ID Token.
   validateIdTokenAtHash(accessToken: string, atHash: string, idTokenAlg: string, configuration: OpenIdConfiguration): Observable<boolean> {

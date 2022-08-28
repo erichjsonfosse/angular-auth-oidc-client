@@ -150,7 +150,7 @@ export interface OpenIdConfiguration {
 
   /**
    * Enables the id_token validation, default value is `true`.
-   * You can disable this validation if you like to ignore the expired value in the renew process.
+   * You can disable this validation if you like to ignore the expired value in the renewal process.
    * If no id_token is returned in using refresh tokens, set this to `false`.
    */
   enableIdTokenExpiredValidationInRenew?: boolean;
